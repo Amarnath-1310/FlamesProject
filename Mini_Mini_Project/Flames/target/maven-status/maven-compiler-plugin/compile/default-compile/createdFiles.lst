@@ -1,0 +1,5 @@
+com\flames\model\FlamesRequest.class
+com\flames\FlamesApplication.class
+com\flames\model\FlamesResponse.class
+com\flames\service\FlamesService.class
+com\flames\controller\FlamesController.class

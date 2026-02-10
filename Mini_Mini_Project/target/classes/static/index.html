@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>FLAMES</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+
+<body>
+  <div class="container">
+    <h1>FLAMES</h1>
+    <form id="flamesForm">
+      <label>Male Name</label>
+      <input type="text" id="male" name="male" placeholder="Enter male name" required>
+
+      <label>Female Name</label>
+      <input type="text" id="female" name="female" placeholder="Enter female name" required>
+
+      <button type="submit">Calculate</button>
+    </form>
+
+    <div id="result" class="result" hidden>
+      <h2 id="resLetter"></h2>
+      <p id="resMeaning"></p>
+      <img id="resImage" src="" alt="result image">
+    </div>
+
+    <div id="error" class="error" hidden></div>
+  </div>
+
+  <script>
+    const form = document.getElementById('flamesForm');
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      document.getElementById('error').hidden = true;
+      const male = document.getElementById('male').value;
+      const female = document.getElementById('female').value;
+
+      const payload = { male, female };
+      try {
+        const resp = await fetch('/api/flames', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        if (!resp.ok) throw new Error('Server error');
+        const data = await resp.json();
+        document.getElementById('resLetter').textContent = data.result;
+        document.getElementById('resMeaning').textContent = data.meaning;
+        document.getElementById('resImage').src = data.image;
+        document.getElementById('result').hidden = false;
+      } catch (err) {
+        const errDiv = document.getElementById('error');
+        errDiv.textContent = 'Error calculating FLAMES: ' + err.message;
+        errDiv.hidden = false;
+      }
+    });
+  </script>
+</body>
+
+</html>
